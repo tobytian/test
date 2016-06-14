@@ -23,12 +23,12 @@ public class PJShadow : MonoBehaviour {
 
     void OnDisable()
     {
-        Clear();
+        //Clear();
     }
 
     void OnGUI()
     {
-        GUI.DrawTexture(new Rect(0, 0, Screen.width * 0.8f, Screen.height * 0.8f), shadowTex);
+        //GUI.DrawTexture(new Rect(0, 0, Screen.width * 0.8f, Screen.height * 0.8f), shadowTex);
     }
 
     void Clear()
