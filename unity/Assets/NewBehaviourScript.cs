@@ -7,20 +7,33 @@ using System.Collections;
 
 public class NewBehaviourScript : MonoBehaviour
 {
-    public Transform test;
-	// Use this for initialization
-	void Start () {
-	
-        Hashtable ht = new Hashtable();
+    private LineRenderer lr;
 
-        ht.Add("looktarget", test);
+    // Use this for initialization
+    void Start()
+    {
+        lr = gameObject.GetComponent<LineRenderer>();
 
-        iTween.LookTo(gameObject,ht);
 
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+        int radius = 30;
+
+        int count = 100;
+        float eachAngle = 360f/count;
+        Vector3 forward = transform.forward;
+
+        lr.SetVertexCount(count+1);
+        for (int i = 0; i <= count; i++)
+        {
+            Vector3 pos = Quaternion.Euler(0, eachAngle*i, 0)*forward*radius + transform.position;
+            lr.SetPosition(i,pos);
+        }
+
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
 }
