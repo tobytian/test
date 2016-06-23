@@ -4,42 +4,86 @@
 //*********************************************************************
 
 
+using System;
 using UnityEngine;
 using System.Collections;
+using UnityEngine.Experimental.Networking;
 
-public class ProjectileTest : MonoBehaviour
+
+public class NewBehaviourScript1 : MonoBehaviour
 {
+    public const float g = 9.8f;
+
     public GameObject target;
     public float speed = 10;
-    private float distanceToTarget;
-    private bool move = true;
+
 
     void Start()
     {
-        distanceToTarget = Vector3.Distance(this.transform.position, target.transform.position);
-        StartCoroutine(Shoot());
+        float tmepDistance = Vector3.Distance(transform.position, target.transform.position);
+        float horizontalSpeed = g * tmepDistance / speed;
+        float verticalSpeed = (float)Math.Sqrt(Math.Pow(speed, 4) - Math.Pow(g, 2) * Math.Pow(tmepDistance, 2)) / speed;
+
+        Debug.Log(horizontalSpeed);
+        Debug.Log(verticalSpeed);
+
+        transform.LookAt(target.transform);
+
     }
 
-    IEnumerator Shoot()
-    {
 
-        while (move)
-        {
-            Vector3 targetPos = target.transform.position;
-            this.transform.LookAt(targetPos);
-            float angle = Mathf.Min(1, Vector3.Distance(this.transform.position, targetPos) / distanceToTarget) * 45;
-            this.transform.rotation = this.transform.rotation * Quaternion.Euler(Mathf.Clamp(-angle, -42, 42), 0, 0);
-            float currentDist = Vector3.Distance(this.transform.position, target.transform.position);
-            print("currentDist" + currentDist);
-            if (currentDist < 0.5f)
-                move = false;
-            this.transform.Translate(Vector3.forward * Mathf.Min(speed * Time.deltaTime, currentDist));
-            yield return null;
-        }
+    void Update()
+    {
+        transform.Translate(transform.forward*speed*Time.deltaTime,Space.World);
     }
 
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+//public class ProjectileTest : MonoBehaviour
+//{
+//    public GameObject target;
+//    public float speed = 10;
+//    private float distanceToTarget;
+//    private bool move = true;
+
+//    void Start()
+//    {
+//        distanceToTarget = Vector3.Distance(this.transform.position, target.transform.position);
+//        StartCoroutine(Shoot());
+//    }
+
+//    IEnumerator Shoot()
+//    {
+
+//        while (move)
+//        {
+//            Vector3 targetPos = target.transform.position;
+//            this.transform.LookAt(targetPos);
+//            float angle = Mathf.Min(1, Vector3.Distance(this.transform.position, targetPos) / distanceToTarget) * 45;
+//            this.transform.rotation = this.transform.rotation * Quaternion.Euler(Mathf.Clamp(-angle, -42, 42), 0, 0);
+//            float currentDist = Vector3.Distance(this.transform.position, target.transform.position);
+//            print("currentDist" + currentDist);
+//            if (currentDist < 0.5f)
+//                move = false;
+//            this.transform.Translate(Vector3.forward * Mathf.Min(speed * Time.deltaTime, currentDist));
+//            yield return null;
+//        }
+//    }
+
+
+//}
 
 
 
