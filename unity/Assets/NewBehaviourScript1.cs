@@ -21,20 +21,32 @@ public class NewBehaviourScript1 : MonoBehaviour
     void Start()
     {
         float tmepDistance = Vector3.Distance(transform.position, target.transform.position);
-        float horizontalSpeed = g * tmepDistance / speed;
-        float verticalSpeed = (float)Math.Sqrt(Math.Pow(speed, 4) - Math.Pow(g, 2) * Math.Pow(tmepDistance, 2)) / speed;
+        float tempTime = tmepDistance / speed;
+        float riseTime, downTime;
+        riseTime = downTime = tempTime / 2;
+        float verticalSpeed = g*riseTime;
 
-        Debug.Log(horizontalSpeed);
+
+        Debug.Log(tempTime);
         Debug.Log(verticalSpeed);
 
-        transform.LookAt(target.transform);
+
+
+
+
+
+
+
+
+       
 
     }
 
 
+    private float time;
     void Update()
     {
-        transform.Translate(transform.forward*speed*Time.deltaTime,Space.World);
+       
     }
 
 
