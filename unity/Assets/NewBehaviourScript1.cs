@@ -16,42 +16,28 @@ public class NewBehaviourScript1 : MonoBehaviour
 
     public GameObject target;
     public float speed = 10;
-
     private float verticalSpeed;
-    private float tmepDistance;
+    private Vector3 moveDirection;
 
-    private float perAngleSpeed;
 
+    private float angleSpeed;
     private float angle;
-
-    private Vector3 direcVector3;
     void Start()
     {
-
-        //var test1 = Math.Asin(0.5f);
-        //var test2 = 180/Math.PI* test1;
-        //Debug.Log(test1);
-
-
-
-
-        tmepDistance = Vector3.Distance(transform.position, target.transform.position);
+       float tmepDistance = Vector3.Distance(transform.position, target.transform.position);
         float tempTime = tmepDistance / speed;
         float riseTime, downTime;
         riseTime = downTime = tempTime / 2;
-        verticalSpeed = g * riseTime;
+         verticalSpeed = g * riseTime;
         transform.LookAt(target.transform.position);
-
-
 
         float tempTan = verticalSpeed / speed;
         double hu = Math.Atan(tempTan);
         angle = (float)(180 / Math.PI * hu);
         transform.eulerAngles = new Vector3(-angle, transform.eulerAngles.y, transform.eulerAngles.z);
-        perAngleSpeed = angle / riseTime;
+        angleSpeed = angle / riseTime;
 
-
-        direcVector3 = target.transform.position - transform.position;
+        moveDirection = target.transform.position - transform.position;
     }
     private float time;
     void Update()
@@ -63,17 +49,10 @@ public class NewBehaviourScript1 : MonoBehaviour
         }
         time += Time.deltaTime;
         float test = verticalSpeed - g * time;
-        transform.Translate(direcVector3.normalized * speed * Time.deltaTime, Space.World);
+        transform.Translate(moveDirection.normalized * speed * Time.deltaTime, Space.World);
         transform.Translate(Vector3.up * test * Time.deltaTime,Space.World);
-
-
-
-        float testAngle = -angle + perAngleSpeed * time;
-
+        float testAngle = -angle + angleSpeed * time;
         transform.eulerAngles = new Vector3(testAngle, transform.eulerAngles.y, transform.eulerAngles.z);
-
-        //float angle = Mathf.Min(1, Vector3.Distance(this.transform.position, target.transform.position) / tmepDistance) * 45;
-        //this.transform.rotation = this.transform.rotation * Quaternion.Euler(Mathf.Clamp(-angle, -42, 42), 0, 0);
     }
 }
 
