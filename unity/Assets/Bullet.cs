@@ -10,7 +10,7 @@ using System.Collections;
 using UnityEngine.Experimental.Networking;
 
 
-public class NewBehaviourScript1 : MonoBehaviour
+public class Bullet : MonoBehaviour
 {
     public const float g = 9.8f;
 
@@ -18,7 +18,6 @@ public class NewBehaviourScript1 : MonoBehaviour
     public float speed = 10;
     private float verticalSpeed;
     private Vector3 moveDirection;
-
 
     private float angleSpeed;
     private float angle;
