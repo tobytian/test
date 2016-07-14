@@ -20,8 +20,15 @@ public class Test : MonoBehaviour
         Debuger.Log(test.Length);
 
         LightmapData test2 = test[0];
-        Debuger.Log(test2.lightmapFar.name);
-        Debuger.Log(test2.lightmapNear.name);
+        Debuger.Log("name: "+test2.lightmapFar.name);
+
+       var test3= test2.lightmapFar;
+
+        Debuger.Log("size: "+test3.width+"---"+test3.height);
+
+        Debuger.Log(test3.texelSize);
+
+
 
     }
 
