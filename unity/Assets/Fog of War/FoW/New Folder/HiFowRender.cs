@@ -11,7 +11,7 @@ public class HiFowRender : MonoBehaviour
     private Renderer[] renderers;
     private float nextUpdate;
     public bool isVisible { get; private set; }
-    private bool isUpdate = true;
+    private bool isCanUpdate = true;
 
 
     // Use this for initialization
@@ -27,7 +27,7 @@ public class HiFowRender : MonoBehaviour
 
     public void Rebuild()
     {
-        isUpdate = true;
+        isCanUpdate = true;
     }
 
     void LateUpdate()
@@ -45,9 +45,9 @@ public class HiFowRender : MonoBehaviour
             return;
         }
         bool temp = HiFowSystem.Instance.IsVisible(transform.position);
-        if (isUpdate||isVisible!=temp)
+        if (isCanUpdate||isVisible!=temp)
         {
-            isUpdate = false;
+            isCanUpdate = false;
             isVisible = temp;
             for (int i = 0; i < renderers.Length; i++)
             {
@@ -55,7 +55,7 @@ public class HiFowRender : MonoBehaviour
                 if (tempRender)
                     tempRender.enabled = isVisible;
             }
-            isUpdate = true;
+            isCanUpdate = true;
             nextUpdate = Time.time;
         }
     }
