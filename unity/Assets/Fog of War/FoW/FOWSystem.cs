@@ -530,6 +530,7 @@ public class FOWSystem : MonoBehaviour
 		int variance = Mathf.RoundToInt(Mathf.Clamp01(margin / (heightRange.y - heightRange.x)) * 255);
 		Color32 white = new Color32(255, 255, 255, 255);
 
+
 		for (int y = ymin; y < ymax; ++y)
 		{
 			if (y > -1 && y < textureSize)

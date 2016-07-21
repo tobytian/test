@@ -4,6 +4,9 @@
 //*********************************************************************
 using UnityEngine;
 using System.Collections;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
+using System.Threading;
 
 public class HiFowSystem : MonoBehaviour
 {
@@ -12,18 +15,37 @@ public class HiFowSystem : MonoBehaviour
 
 
 
+    static BetterList<Revealer> revealerList = new BetterList<Revealer>();
     static BetterList<Revealer> addedList = new BetterList<Revealer>();
     static BetterList<Revealer> removedList = new BetterList<Revealer>();
 
 
 
-    private Color32[] buffer0Color32;
-    private Color32[] buffer1Color32;
+    private Color32[] color32s0;
+    private Color32[] color32s1;
     public int worldSize = 512;
     public int textureSize = 128;
 
     private Vector3 originPos;
 
+    State state = State.Blending;
+
+    private enum State
+    {
+        Blending,
+        NeedUpdate,
+        UpdateTexture0,
+        UpdateTexture1,
+    }
+
+    void Awake()
+    {
+        Instance = this;
+    }
+
+
+    private float nextUpdate;
+    public float updateFrequency = 0.1f;
     // Use this for initialization
     void Start()
     {
@@ -32,12 +54,199 @@ public class HiFowSystem : MonoBehaviour
         originPos.x -= worldSize * 0.5f;
         originPos.z -= worldSize * 0.5f;
         #endregion
+
+        var temp = textureSize * textureSize;
+        color32s0 = new Color32[temp];
+        color32s1 = new Color32[temp];
+
+        UpdateBuffer();
+        UpdateTexture();
+        nextUpdate = Time.time + updateFrequency;
+
+        thread = new Thread(ThreadUpdate);
+        thread.Start();
+    }
+
+    private Thread thread;
+    private float elapsed = 0;
+    void ThreadUpdate()
+    {
+        Stopwatch sw = new Stopwatch();
+        for (;;)
+        {
+            if (state == State.NeedUpdate)
+            {
+                sw.Reset();
+                sw.Start();
+                UpdateBuffer();
+                sw.Stop();
+                elapsed = 0.001f*(float) sw.ElapsedMilliseconds;
+                state=State.UpdateTexture0;
+            }
+            Thread.Sleep(1);
+        }
+    }
+
+    void OnDestroy()
+    {
+        if (thread != null)
+        {
+            thread.Abort();
+            while (thread.IsAlive)
+            {
+                Thread.Sleep(1);
+                thread = null;
+            }
+        }
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.matrix = transform.localToWorldMatrix;
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireCube(Vector3.zero, new Vector3(worldSize,0,worldSize));
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (state == State.Blending)
+        {
+            if (nextUpdate < Time.time)
+            {
+                nextUpdate = Time.time + updateFrequency;
+                state=State.NeedUpdate;
+            }
+        }
+        else if(state!=State.NeedUpdate)
+        {
+            UpdateTexture();
+        }
+    }
 
+    
+
+
+    void UpdateBuffer()
+    {
+        if (addedList.size > 0)
+        {
+            lock (addedList)
+            {
+                while (addedList.size > 0)
+                {
+                    var tempIndex = addedList.size - 1;
+                    revealerList.Add(addedList[tempIndex]);
+                    addedList.RemoveAt(tempIndex);
+                }
+            }
+        }
+        if (removedList.size > 0)
+        {
+            lock (removedList)
+            {
+                while (removedList.size > 0)
+                {
+                    var tempIndex = removedList.size - 1;
+                    removedList.Remove(removedList.buffer[tempIndex]);
+                    removedList.RemoveAt(tempIndex);
+                }
+            }
+        }
+
+        for (int i = 0; i < textureSize * textureSize; i++)
+        {
+            color32s1[i].r = 0;
+        }
+        float tempWorldToTex = (float)textureSize / worldSize;
+        for (int i = 0; i < revealerList.size; i++)
+        {
+            Revealer temp = revealerList[i];
+            if (!temp.isActive)
+                continue;
+            RevealUsingLOS(temp, tempWorldToTex);
+        }
+        RevealMap();
+    }
+
+    private Texture2D texture2D0;
+    private Texture2D texture2D1;
+    void UpdateTexture()
+    {
+        if (texture2D0 == null)
+        {
+            texture2D0 = new Texture2D(textureSize,textureSize,TextureFormat.ARGB32, false);
+            texture2D1 = new Texture2D(textureSize,textureSize,TextureFormat.ARGB32, false);
+            texture2D0.wrapMode = TextureWrapMode.Clamp;
+            texture2D1.wrapMode = TextureWrapMode.Clamp;
+
+            texture2D0.SetPixels32(color32s0);
+            texture2D0.Apply();
+            texture2D1.SetPixels32(color32s1);
+            texture2D1.Apply();
+          state = State.Blending;
+        }
+        else if(state==State.UpdateTexture0)
+        {
+            texture2D0.SetPixels32(color32s0);
+            texture2D0.Apply();
+            state = State.UpdateTexture1;
+        }
+        else if(state==State.UpdateTexture1)
+        {
+            texture2D1.SetPixels32(color32s1);
+            texture2D1.Apply();
+            state = State.Blending;
+        }
+    }
+
+    void RevealUsingLOS(Revealer paramRevealer, float paramWorldToTex)
+    {
+        Vector3 tempPos = paramRevealer.pos - originPos;
+        int xmin = Mathf.RoundToInt((tempPos.x - paramRevealer.range) * paramWorldToTex);
+        int ymin = Mathf.RoundToInt((tempPos.z - paramRevealer.range) * paramWorldToTex);
+        int xmax = Mathf.RoundToInt((tempPos.x + paramRevealer.range) * paramWorldToTex);
+        int ymax = Mathf.RoundToInt((tempPos.z + paramRevealer.range) * paramWorldToTex);
+        int cx = Mathf.RoundToInt(tempPos.x * paramWorldToTex);
+        int cy = Mathf.RoundToInt(tempPos.z * paramWorldToTex);
+
+        cx = Mathf.Clamp(cx, 0, textureSize - 1);//because of arry start from 0
+        cy = Mathf.Clamp(cy, 0, textureSize - 1);
+
+        Color32 white = Color.white;
+
+        int range = Mathf.RoundToInt(paramRevealer.range * paramWorldToTex * paramRevealer.range*paramWorldToTex);
+        for (int y = ymin; y < ymax; y++)
+        {
+            if (y > -1 && y < textureSize)
+            {
+                for (int x = xmin; x < xmax; x++)
+                {
+                    if (x > -1 && x < textureSize)
+                    {
+                        int index = y* textureSize + x;
+                        color32s1[index] = white;
+                    }
+                }
+            }
+        }
+    }
+
+    void RevealMap()
+    {
+        for (int y = 0; y < textureSize; y++)
+        {
+            for (int x = 0; x < textureSize; x++)
+            {
+                int index = y * textureSize + x;
+                Color32 tempC = color32s1[index];
+                if (tempC.g < tempC.r)
+                {
+                    tempC.g = tempC.r;
+                    color32s1[index] = tempC;
+                }
+            }
+        }
     }
 
     public static Revealer CreateRevealer()
@@ -66,16 +275,16 @@ public class HiFowSystem : MonoBehaviour
     /// <returns>position</returns>
     public bool IsVisible(Vector3 param)
     {
-        if (buffer0Color32 == null)
+        if (color32s0 == null)
             return false;
         param -= originPos;
         float tempWorldToTex = (float)textureSize / worldSize;
         int tempCx = Mathf.RoundToInt(param.x * tempWorldToTex);
-        int tempCz = Mathf.RoundToInt(param.z * tempWorldToTex);
+        int tempCy = Mathf.RoundToInt(param.z * tempWorldToTex);
         tempCx = Mathf.Clamp(tempCx, 0, textureSize - 1);
-        tempCz = Mathf.Clamp(tempCz, 0, textureSize - 1);
-        int tempIndex = tempCx + tempCz * textureSize;
-        return buffer0Color32[tempIndex].r > 0 || buffer1Color32[tempIndex].r > 0;
+        tempCy = Mathf.Clamp(tempCy, 0, textureSize - 1);
+        int tempIndex = tempCx + tempCy * textureSize;
+        return color32s0[tempIndex].r > 0 || color32s1[tempIndex].r > 0;
     }
 
     public class Revealer
