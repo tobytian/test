@@ -173,6 +173,31 @@ public class HiFowSystem : MonoBehaviour
     public Texture2D texture2D1;
     void UpdateTexture()
     {
+       // texture2D0 = new Texture2D(textureSize, textureSize, TextureFormat.ARGB32, false);
+       // texture2D1 = new Texture2D(textureSize, textureSize, TextureFormat.ARGB32, false);
+       // texture2D0.wrapMode = TextureWrapMode.Clamp;
+       // texture2D1.wrapMode = TextureWrapMode.Clamp;
+
+
+       // Color32[] test = new Color32[textureSize*textureSize];
+       //for(int i=0;i<test.Length;i++)
+       // {
+       //     test[i] = Color.red;
+       // }
+       // texture2D0.SetPixels32(test);
+       // texture2D0.Apply();
+
+
+       // return;
+
+
+
+
+
+
+
+
+
         if (texture2D0 == null)
         {
             texture2D0 = new Texture2D(textureSize,textureSize,TextureFormat.ARGB32, false);
