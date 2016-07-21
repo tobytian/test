@@ -74,7 +74,7 @@ public class HiFowSystem : MonoBehaviour
         thread = new Thread(ThreadUpdate);
         thread.Start();
 
-       
+
     }
 
     private Thread thread;
@@ -244,7 +244,12 @@ public class HiFowSystem : MonoBehaviour
                     if (x > -1 && x < textureSize)
                     {
                         int index = y * textureSize + x;
-                        color32s1[index] = white;
+                        int xd = x - cx;
+                        int yd = y - cy;
+                        int dist = xd * xd + yd * yd;
+                        
+                        if (dist < range)
+                            color32s1[index] = white;
                     }
                 }
             }
