@@ -8,17 +8,15 @@ using System.Collections;
 public class HiFowCamera : MonoBehaviour
 {
     public Color unexplored = Color.gray;
-    public Color explored = Color.gray;
 
+    private Color explored;
     private Shader shader;
     private HiFowSystem fOWSystem;
-    private Camera camera;
+    private Camera thisCamera;
     private Matrix4x4 inverseMVP;
     private Material material;
 
-    
 
-    // Use this for initialization
     void Start()
     {
         if (!SystemInfo.supportsImageEffects || !shader || !shader.isSupported)
@@ -26,16 +24,10 @@ public class HiFowCamera : MonoBehaviour
             enabled = false;
         }
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
     void OnEnable()
     {
-        camera = GetComponent<Camera>();
-        camera.depthTextureMode = DepthTextureMode.Depth;
+        thisCamera = GetComponent<Camera>();
+        thisCamera.depthTextureMode = DepthTextureMode.Depth;
         if (!shader)
             shader = Shader.Find("Image Effects/Fog of War");
     }
@@ -46,7 +38,7 @@ public class HiFowCamera : MonoBehaviour
             DestroyImmediate(material);
     }
 
-    void OnRenderImage(RenderTexture paramSource,RenderTexture paramDestination)
+    void OnRenderImage(RenderTexture paramSource, RenderTexture paramDestination)
     {
         if (!fOWSystem)
         {
@@ -60,12 +52,12 @@ public class HiFowCamera : MonoBehaviour
             return;
         }
 
-        inverseMVP = (camera.projectionMatrix * camera.worldToCameraMatrix).inverse;
+        inverseMVP = (thisCamera.projectionMatrix * thisCamera.worldToCameraMatrix).inverse;
 
-        float invScale = 1f/fOWSystem.worldSize;
+        float invScale = 1f / fOWSystem.worldSize;
         Transform t = fOWSystem.transform;
-        float x = t.position.x - fOWSystem.worldSize*0.5f;
-        float z = t.position.z - fOWSystem.worldSize*0.5f;
+        float x = t.position.x - fOWSystem.worldSize * 0.5f;
+        float z = t.position.z - fOWSystem.worldSize * 0.5f;
 
         if (material == null)
         {
@@ -73,16 +65,37 @@ public class HiFowCamera : MonoBehaviour
             material.hideFlags = HideFlags.HideAndDontSave;
         }
 
+
+
+
         Vector4 camPos = transform.position;
-        Vector4 p = new Vector4(-x * invScale, -z * invScale, invScale, 1);
+
+
+
+        //if (QualitySettings.antiAliasing > 0)
+        //{
+        //    RuntimePlatform pl = Application.platform;
+
+        //    if (pl == RuntimePlatform.WindowsEditor ||
+        //        pl == RuntimePlatform.WindowsPlayer ||
+        //        pl == RuntimePlatform.WindowsWebPlayer)
+        //    {
+        //        camPos.w = 1f;
+        //    }
+        //}
+
+
+    
+
+        Vector4 p = new Vector4(-x * invScale, -z * invScale, invScale, fOWSystem.blendFactor);
         material.SetColor("_Unexplored", unexplored);
+        explored = unexplored;
         material.SetColor("_Explored", explored);
         material.SetVector("_CamPos", camPos);
         material.SetVector("_Params", p);
         material.SetMatrix("_InverseMVP", inverseMVP);
         material.SetTexture("_FogTex0", fOWSystem.texture2D0);
         material.SetTexture("_FogTex1", fOWSystem.texture2D1);
-
         Graphics.Blit(paramSource, paramDestination, material);
     }
 }

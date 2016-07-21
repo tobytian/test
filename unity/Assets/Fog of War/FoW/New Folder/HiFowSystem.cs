@@ -3,16 +3,17 @@
 // Author: hiramtan@live.com
 //*********************************************************************
 using UnityEngine;
-using System.Collections;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using System.Threading;
+
+
+using Debug = UnityEngine.Debug;
 
 public class HiFowSystem : MonoBehaviour
 {
-
     public static HiFowSystem Instance;
-
+    public int worldSize = 512;
+    public int textureSize = 128;
 
 
     static BetterList<Revealer> revealerList = new BetterList<Revealer>();
@@ -23,13 +24,20 @@ public class HiFowSystem : MonoBehaviour
 
     private Color32[] color32s0;
     private Color32[] color32s1;
-    public int worldSize = 512;
-    public int textureSize = 128;
+
 
     private Vector3 originPos;
 
-    State state = State.Blending;
 
+
+
+
+    public float delay = 0.5f;
+
+    public float blendFactor { get; private set; }
+
+
+    State state = State.Blending;
     private enum State
     {
         Blending,
@@ -65,6 +73,8 @@ public class HiFowSystem : MonoBehaviour
 
         thread = new Thread(ThreadUpdate);
         thread.Start();
+
+       
     }
 
     private Thread thread;
@@ -80,8 +90,8 @@ public class HiFowSystem : MonoBehaviour
                 sw.Start();
                 UpdateBuffer();
                 sw.Stop();
-                elapsed = 0.001f*(float) sw.ElapsedMilliseconds;
-                state=State.UpdateTexture0;
+                elapsed = 0.001f * (float)sw.ElapsedMilliseconds;
+                state = State.UpdateTexture0;
             }
             Thread.Sleep(1);
         }
@@ -91,7 +101,9 @@ public class HiFowSystem : MonoBehaviour
     {
         if (thread != null)
         {
+            Debug.Log(thread);
             thread.Abort();
+            Debug.Log(thread);
             while (thread.IsAlive)
             {
                 Thread.Sleep(1);
@@ -104,28 +116,32 @@ public class HiFowSystem : MonoBehaviour
     {
         Gizmos.matrix = transform.localToWorldMatrix;
         Gizmos.color = Color.blue;
-        Gizmos.DrawWireCube(Vector3.zero, new Vector3(worldSize,0,worldSize));
+        Gizmos.DrawWireCube(Vector3.zero, new Vector3(worldSize, 0, worldSize));
     }
 
     // Update is called once per frame
     void Update()
     {
+
+        if (delay > 0f)
+        {
+            blendFactor = Mathf.Clamp01(blendFactor + Time.deltaTime / delay);
+        }
+        else blendFactor = 1f;
+
         if (state == State.Blending)
         {
             if (nextUpdate < Time.time)
             {
                 nextUpdate = Time.time + updateFrequency;
-                state=State.NeedUpdate;
+                state = State.NeedUpdate;
             }
         }
-        else if(state!=State.NeedUpdate)
+        else if (state != State.NeedUpdate)
         {
             UpdateTexture();
         }
     }
-
-    
-
 
     void UpdateBuffer()
     {
@@ -136,7 +152,7 @@ public class HiFowSystem : MonoBehaviour
                 while (addedList.size > 0)
                 {
                     var tempIndex = addedList.size - 1;
-                    revealerList.Add(addedList[tempIndex]);
+                    revealerList.Add(addedList.buffer[tempIndex]);
                     addedList.RemoveAt(tempIndex);
                 }
             }
@@ -153,9 +169,10 @@ public class HiFowSystem : MonoBehaviour
                 }
             }
         }
-
-        for (int i = 0; i < textureSize * textureSize; i++)
+        float factor = (delay > 0f) ? Mathf.Clamp01(blendFactor + elapsed / delay) : 1f;
+        for (int i = 0, imax = color32s0.Length; i < imax; ++i)
         {
+            color32s0[i] = Color32.Lerp(color32s0[i], color32s1[i], factor);
             color32s1[i].r = 0;
         }
         float tempWorldToTex = (float)textureSize / worldSize;
@@ -173,35 +190,11 @@ public class HiFowSystem : MonoBehaviour
     public Texture2D texture2D1;
     void UpdateTexture()
     {
-       // texture2D0 = new Texture2D(textureSize, textureSize, TextureFormat.ARGB32, false);
-       // texture2D1 = new Texture2D(textureSize, textureSize, TextureFormat.ARGB32, false);
-       // texture2D0.wrapMode = TextureWrapMode.Clamp;
-       // texture2D1.wrapMode = TextureWrapMode.Clamp;
-
-
-       // Color32[] test = new Color32[textureSize*textureSize];
-       //for(int i=0;i<test.Length;i++)
-       // {
-       //     test[i] = Color.red;
-       // }
-       // texture2D0.SetPixels32(test);
-       // texture2D0.Apply();
-
-
-       // return;
-
-
-
-
-
-
-
-
 
         if (texture2D0 == null)
         {
-            texture2D0 = new Texture2D(textureSize,textureSize,TextureFormat.ARGB32, false);
-            texture2D1 = new Texture2D(textureSize,textureSize,TextureFormat.ARGB32, false);
+            texture2D0 = new Texture2D(textureSize, textureSize, TextureFormat.ARGB32, false);
+            texture2D1 = new Texture2D(textureSize, textureSize, TextureFormat.ARGB32, false);
             texture2D0.wrapMode = TextureWrapMode.Clamp;
             texture2D1.wrapMode = TextureWrapMode.Clamp;
 
@@ -209,15 +202,16 @@ public class HiFowSystem : MonoBehaviour
             texture2D0.Apply();
             texture2D1.SetPixels32(color32s1);
             texture2D1.Apply();
-          state = State.Blending;
+            state = State.Blending;
         }
-        else if(state==State.UpdateTexture0)
+        else if (state == State.UpdateTexture0)
         {
             texture2D0.SetPixels32(color32s0);
             texture2D0.Apply();
             state = State.UpdateTexture1;
+            blendFactor = 0f;
         }
-        else if(state==State.UpdateTexture1)
+        else if (state == State.UpdateTexture1)
         {
             texture2D1.SetPixels32(color32s1);
             texture2D1.Apply();
@@ -240,7 +234,7 @@ public class HiFowSystem : MonoBehaviour
 
         Color32 white = Color.white;
 
-        int range = Mathf.RoundToInt(paramRevealer.range * paramWorldToTex * paramRevealer.range*paramWorldToTex);
+        int range = Mathf.RoundToInt(paramRevealer.range * paramWorldToTex * paramRevealer.range * paramWorldToTex);
         for (int y = ymin; y < ymax; y++)
         {
             if (y > -1 && y < textureSize)
@@ -249,7 +243,7 @@ public class HiFowSystem : MonoBehaviour
                 {
                     if (x > -1 && x < textureSize)
                     {
-                        int index = y* textureSize + x;
+                        int index = y * textureSize + x;
                         color32s1[index] = white;
                     }
                 }
@@ -317,9 +311,5 @@ public class HiFowSystem : MonoBehaviour
         public bool isActive;
         public Vector3 pos;
         public float range;
-        public bool[] cachedBuffer;
-        public int cachedSize;
-        public int cachedX;
-        public int cachedY;
     }
 }

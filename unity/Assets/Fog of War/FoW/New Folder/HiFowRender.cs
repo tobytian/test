@@ -25,11 +25,6 @@ public class HiFowRender : MonoBehaviour
 	
 	}
 
-    public void Rebuild()
-    {
-        isCanUpdate = true;
-    }
-
     void LateUpdate()
     {
         if (nextUpdate < Time.time)

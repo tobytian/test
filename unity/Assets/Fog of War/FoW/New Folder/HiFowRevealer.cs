@@ -7,9 +7,7 @@ using System.Collections;
 
 public class HiFowRevealer : MonoBehaviour
 {
-
     public float range = 50;
-
     public bool isActive = true;
 
     private HiFowSystem.Revealer revealer;
@@ -42,11 +40,5 @@ public class HiFowRevealer : MonoBehaviour
         {
             revealer.isActive = false;
         }
-        revealer.cachedBuffer = null;
-    }
-
-    public void Rebuild()
-    {
-        revealer.cachedBuffer = null;
     }
 }
