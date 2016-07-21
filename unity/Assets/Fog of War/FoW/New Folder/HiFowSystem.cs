@@ -5,38 +5,28 @@
 using UnityEngine;
 using System.Diagnostics;
 using System.Threading;
-
-
 using Debug = UnityEngine.Debug;
 
 public class HiFowSystem : MonoBehaviour
 {
     public static HiFowSystem Instance;
+
     public int worldSize = 512;
     public int textureSize = 128;
+    public float delay = 0.5f;
+    public float updateFrequency = 0.1f;
 
-
-    static BetterList<Revealer> revealerList = new BetterList<Revealer>();
-    static BetterList<Revealer> addedList = new BetterList<Revealer>();
-    static BetterList<Revealer> removedList = new BetterList<Revealer>();
-
-
-
+    private static BetterList<Revealer> revealerList = new BetterList<Revealer>();
+    private static BetterList<Revealer> addedList = new BetterList<Revealer>();
+    private static BetterList<Revealer> removedList = new BetterList<Revealer>();
     private Color32[] color32s0;
     private Color32[] color32s1;
     private Color32[] color32s2;
-
     private Vector3 originPos;
-
-
-
-
-
-    public float delay = 0.5f;
-
+    private float nextUpdate;
+    private Thread thread;
+    private float elapsed = 0;
     public float blendFactor { get; private set; }
-
-
     State state = State.Blending;
     private enum State
     {
@@ -50,56 +40,6 @@ public class HiFowSystem : MonoBehaviour
     {
         Instance = this;
     }
-
-    void SmoothBoundary()
-    {
-        Color32 c;
-
-        for (int y = 0; y < textureSize; ++y)
-        {
-            int yw = y * textureSize;
-            int yw0 = (y - 1);
-            if (yw0 < 0) yw0 = 0;
-            int yw1 = (y + 1);
-            if (yw1 == textureSize) yw1 = y;
-
-            yw0 *= textureSize;
-            yw1 *= textureSize;
-
-            for (int x = 0; x < textureSize; ++x)
-            {
-                int x0 = (x - 1);
-                if (x0 < 0) x0 = 0;
-                int x1 = (x + 1);
-                if (x1 == textureSize) x1 = x;
-
-                int index = x + yw;
-                int val = color32s1[index].r;
-
-                val += color32s1[x0 + yw].r;
-                val += color32s1[x1 + yw].r;
-                val += color32s1[x + yw0].r;
-                val += color32s1[x + yw1].r;
-
-                val += color32s1[x0 + yw0].r;
-                val += color32s1[x1 + yw0].r;
-                val += color32s1[x0 + yw1].r;
-                val += color32s1[x1 + yw1].r;
-
-                c = color32s2[index];
-                c.r = (byte)(val / 9);
-                color32s2[index] = c;
-            }
-        }
-
-        // Swap the buffer so that the blurred one is used
-        Color32[] temp = color32s1;
-        color32s1 = color32s2;
-        color32s2 = temp;
-    }
-
-    private float nextUpdate;
-    public float updateFrequency = 0.1f;
     // Use this for initialization
     void Start()
     {
@@ -117,31 +57,8 @@ public class HiFowSystem : MonoBehaviour
         UpdateBuffer();
         UpdateTexture();
         nextUpdate = Time.time + updateFrequency;
-
         thread = new Thread(ThreadUpdate);
         thread.Start();
-
-
-    }
-
-    private Thread thread;
-    private float elapsed = 0;
-    void ThreadUpdate()
-    {
-        Stopwatch sw = new Stopwatch();
-        for (;;)
-        {
-            if (state == State.NeedUpdate)
-            {
-                sw.Reset();
-                sw.Start();
-                UpdateBuffer();
-                sw.Stop();
-                elapsed = 0.001f * (float)sw.ElapsedMilliseconds;
-                state = State.UpdateTexture0;
-            }
-            Thread.Sleep(1);
-        }
     }
 
     void OnDestroy()
@@ -169,11 +86,8 @@ public class HiFowSystem : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         if (delay > 0f)
-        {
             blendFactor = Mathf.Clamp01(blendFactor + Time.deltaTime / delay);
-        }
         else blendFactor = 1f;
 
         if (state == State.Blending)
@@ -185,11 +99,25 @@ public class HiFowSystem : MonoBehaviour
             }
         }
         else if (state != State.NeedUpdate)
-        {
             UpdateTexture();
+    }
+    void ThreadUpdate()
+    {
+        Stopwatch sw = new Stopwatch();
+        for (;;)
+        {
+            if (state == State.NeedUpdate)
+            {
+                sw.Reset();
+                sw.Start();
+                UpdateBuffer();
+                sw.Stop();
+                elapsed = 0.001f * (float)sw.ElapsedMilliseconds;
+                state = State.UpdateTexture0;
+            }
+            Thread.Sleep(1);
         }
     }
-
     void UpdateBuffer()
     {
         if (addedList.size > 0)
@@ -228,9 +156,8 @@ public class HiFowSystem : MonoBehaviour
             Revealer temp = revealerList[i];
             if (!temp.isActive)
                 continue;
-            RevealUsingLOS(temp, tempWorldToTex);
+            RevealObj(temp, tempWorldToTex);
         }
-
         SmoothBoundary();
         RevealMap();
     }
@@ -239,7 +166,6 @@ public class HiFowSystem : MonoBehaviour
     public Texture2D texture2D1;
     void UpdateTexture()
     {
-
         if (texture2D0 == null)
         {
             texture2D0 = new Texture2D(textureSize, textureSize, TextureFormat.ARGB32, false);
@@ -268,7 +194,7 @@ public class HiFowSystem : MonoBehaviour
         }
     }
 
-    void RevealUsingLOS(Revealer paramRevealer, float paramWorldToTex)
+    void RevealObj(Revealer paramRevealer, float paramWorldToTex)
     {
         Vector3 tempPos = paramRevealer.pos - originPos;
         int xmin = Mathf.RoundToInt((tempPos.x - paramRevealer.range) * paramWorldToTex);
@@ -277,12 +203,9 @@ public class HiFowSystem : MonoBehaviour
         int ymax = Mathf.RoundToInt((tempPos.z + paramRevealer.range) * paramWorldToTex);
         int cx = Mathf.RoundToInt(tempPos.x * paramWorldToTex);
         int cy = Mathf.RoundToInt(tempPos.z * paramWorldToTex);
-
-        cx = Mathf.Clamp(cx, 0, textureSize - 1);//because of arry start from 0
+        cx = Mathf.Clamp(cx, 0, textureSize - 1);
         cy = Mathf.Clamp(cy, 0, textureSize - 1);
-
         Color32 white = Color.white;
-
         int range = Mathf.RoundToInt(paramRevealer.range * paramWorldToTex * paramRevealer.range * paramWorldToTex);
         for (int y = ymin; y < ymax; y++)
         {
@@ -296,7 +219,6 @@ public class HiFowSystem : MonoBehaviour
                         int xd = x - cx;
                         int yd = y - cy;
                         int dist = xd * xd + yd * yd;
-                        
                         if (dist < range)
                             color32s1[index] = white;
                     }
@@ -341,11 +263,6 @@ public class HiFowSystem : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="param"></param>
-    /// <returns>position</returns>
     public bool IsVisible(Vector3 param)
     {
         if (color32s0 == null)
@@ -358,6 +275,43 @@ public class HiFowSystem : MonoBehaviour
         tempCy = Mathf.Clamp(tempCy, 0, textureSize - 1);
         int tempIndex = tempCx + tempCy * textureSize;
         return color32s0[tempIndex].r > 0 || color32s1[tempIndex].r > 0;
+    }
+    void SmoothBoundary()
+    {
+        Color32 tempC;
+        for (int y = 0; y < textureSize; ++y)
+        {
+            int yw = y * textureSize;
+            int yw0 = (y - 1);
+            if (yw0 < 0) yw0 = 0;
+            int yw1 = (y + 1);
+            if (yw1 == textureSize) yw1 = y;
+            yw0 *= textureSize;
+            yw1 *= textureSize;
+            for (int x = 0; x < textureSize; ++x)
+            {
+                int x0 = (x - 1);
+                if (x0 < 0) x0 = 0;
+                int x1 = (x + 1);
+                if (x1 == textureSize) x1 = x;
+                int index = x + yw;
+                int val = color32s1[index].r;
+                val += color32s1[x0 + yw].r;
+                val += color32s1[x1 + yw].r;
+                val += color32s1[x + yw0].r;
+                val += color32s1[x + yw1].r;
+                val += color32s1[x0 + yw0].r;
+                val += color32s1[x1 + yw0].r;
+                val += color32s1[x0 + yw1].r;
+                val += color32s1[x1 + yw1].r;
+                tempC = color32s2[index];
+                tempC.r = (byte)(val / 9);
+                color32s2[index] = tempC;
+            }
+        }
+        Color32[] temp = color32s1;
+        color32s1 = color32s2;
+        color32s2 = temp;
     }
 
     public class Revealer

@@ -8,8 +8,8 @@ using System.Collections;
 public class HiFowRevealer : MonoBehaviour
 {
     public float range = 50;
-    public bool isActive = true;
 
+    private bool isActive = true;
     private HiFowSystem.Revealer revealer;
 
     void Awake()
