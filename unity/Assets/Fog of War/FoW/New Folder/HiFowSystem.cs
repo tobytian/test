@@ -169,8 +169,8 @@ public class HiFowSystem : MonoBehaviour
         RevealMap();
     }
 
-    private Texture2D texture2D0;
-    private Texture2D texture2D1;
+    public Texture2D texture2D0;
+    public Texture2D texture2D1;
     void UpdateTexture()
     {
         if (texture2D0 == null)

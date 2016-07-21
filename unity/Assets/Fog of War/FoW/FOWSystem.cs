@@ -526,9 +526,9 @@ public class FOWSystem : MonoBehaviour
 
 		int minRange = Mathf.RoundToInt(r.inner * r.inner * worldToTex * worldToTex);
 		int maxRange = Mathf.RoundToInt(r.outer * r.outer * worldToTex * worldToTex);
-		int gh = WorldToGridHeight(r.pos.y);
-		int variance = Mathf.RoundToInt(Mathf.Clamp01(margin / (heightRange.y - heightRange.x)) * 255);
-		Color32 white = new Color32(255, 255, 255, 255);
+        int gh = WorldToGridHeight(r.pos.y);
+        int variance = Mathf.RoundToInt(Mathf.Clamp01(margin / (heightRange.y - heightRange.x)) * 255);
+        Color32 white = new Color32(255, 255, 255, 255);
 
 
 		for (int y = ymin; y < ymax; ++y)
