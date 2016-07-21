@@ -24,7 +24,7 @@ public class HiFowSystem : MonoBehaviour
 
     private Color32[] color32s0;
     private Color32[] color32s1;
-
+    private Color32[] color32s2;
 
     private Vector3 originPos;
 
@@ -51,6 +51,52 @@ public class HiFowSystem : MonoBehaviour
         Instance = this;
     }
 
+    void SmoothBoundary()
+    {
+        Color32 c;
+
+        for (int y = 0; y < textureSize; ++y)
+        {
+            int yw = y * textureSize;
+            int yw0 = (y - 1);
+            if (yw0 < 0) yw0 = 0;
+            int yw1 = (y + 1);
+            if (yw1 == textureSize) yw1 = y;
+
+            yw0 *= textureSize;
+            yw1 *= textureSize;
+
+            for (int x = 0; x < textureSize; ++x)
+            {
+                int x0 = (x - 1);
+                if (x0 < 0) x0 = 0;
+                int x1 = (x + 1);
+                if (x1 == textureSize) x1 = x;
+
+                int index = x + yw;
+                int val = color32s1[index].r;
+
+                val += color32s1[x0 + yw].r;
+                val += color32s1[x1 + yw].r;
+                val += color32s1[x + yw0].r;
+                val += color32s1[x + yw1].r;
+
+                val += color32s1[x0 + yw0].r;
+                val += color32s1[x1 + yw0].r;
+                val += color32s1[x0 + yw1].r;
+                val += color32s1[x1 + yw1].r;
+
+                c = color32s2[index];
+                c.r = (byte)(val / 9);
+                color32s2[index] = c;
+            }
+        }
+
+        // Swap the buffer so that the blurred one is used
+        Color32[] temp = color32s1;
+        color32s1 = color32s2;
+        color32s2 = temp;
+    }
 
     private float nextUpdate;
     public float updateFrequency = 0.1f;
@@ -66,6 +112,7 @@ public class HiFowSystem : MonoBehaviour
         var temp = textureSize * textureSize;
         color32s0 = new Color32[temp];
         color32s1 = new Color32[temp];
+        color32s2 = new Color32[temp];
 
         UpdateBuffer();
         UpdateTexture();
@@ -183,6 +230,8 @@ public class HiFowSystem : MonoBehaviour
                 continue;
             RevealUsingLOS(temp, tempWorldToTex);
         }
+
+        SmoothBoundary();
         RevealMap();
     }
 
