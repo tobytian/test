@@ -28,6 +28,8 @@ public class HiFowSystem : MonoBehaviour
     private float elapsed = 0;
     public float blendFactor { get; private set; }
     State state = State.Blending;
+    public Texture2D texture2D0 { get; private set; }
+    public Texture2D texture2D1 { get; private set; }
     private enum State
     {
         Blending,
@@ -65,9 +67,7 @@ public class HiFowSystem : MonoBehaviour
     {
         if (thread != null)
         {
-            Debug.Log(thread);
             thread.Abort();
-            Debug.Log(thread);
             while (thread.IsAlive)
             {
                 Thread.Sleep(1);
@@ -162,8 +162,7 @@ public class HiFowSystem : MonoBehaviour
         RevealMap();
     }
 
-    public Texture2D texture2D0;
-    public Texture2D texture2D1;
+    
     void UpdateTexture()
     {
         if (texture2D0 == null)
