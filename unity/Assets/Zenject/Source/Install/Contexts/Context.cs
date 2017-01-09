@@ -231,29 +231,29 @@ namespace Zenject
                 switch (bindType)
                 {
                     case ZenjectBinding.BindTypes.Self:
-                    {
-                        Container.Bind(componentType).WithId(identifier).FromInstance(component, true);
-                        break;
-                    }
+                        {
+                            Container.Bind(componentType).WithId(identifier).FromInstance(component, true);
+                            break;
+                        }
                     case ZenjectBinding.BindTypes.BaseType:
-                    {
-                        Container.Bind(componentType.BaseType()).WithId(identifier).FromInstance(component, true);
-                        break;
-                    }
+                        {
+                            Container.Bind(componentType.BaseType()).WithId(identifier).FromInstance(component, true);
+                            break;
+                        }
                     case ZenjectBinding.BindTypes.AllInterfaces:
-                    {
-                        Container.BindAllInterfaces(componentType).WithId(identifier).FromInstance(component, true);
-                        break;
-                    }
+                        {
+                            Container.BindAllInterfaces(componentType).WithId(identifier).FromInstance(component, true);
+                            break;
+                        }
                     case ZenjectBinding.BindTypes.AllInterfacesAndSelf:
-                    {
-                        Container.BindAllInterfacesAndSelf(componentType).WithId(identifier).FromInstance(component, true);
-                        break;
-                    }
+                        {
+                            Container.BindAllInterfacesAndSelf(componentType).WithId(identifier).FromInstance(component, true);
+                            break;
+                        }
                     default:
-                    {
-                        throw Assert.CreateException();
-                    }
+                        {
+                            throw Assert.CreateException();
+                        }
                 }
             }
         }
