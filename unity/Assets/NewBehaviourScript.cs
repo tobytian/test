@@ -3,42 +3,47 @@
 // Author: hiramtan@live.com
 //*********************************************************************
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
 public class NewBehaviourScript : MonoBehaviour
 {
-
-    public List<GameObject> test = new List<GameObject>();
-
-
-    public List<GameObject> test1;
-
-
-    void OnGUI()
-    {
-        if (GUI.Button(new Rect(0, 0, 100, 50), "click"))
-            test.RemoveAt(0);
-    }
-
-    // Use this for initialization
+    [SerializeField]
+    public Test test1;
+    [SerializeField]
+    public Test test2;
     void Start()
     {
-        test.Add(new GameObject());
-        test.Add(new GameObject());
-        test.Add(new GameObject());
+        test1 = new Test();
+        test1.x = 10;
+        test1.Testttt = new Testttt();
+        test1.Testttt.x = 10;
 
-
-        test1 = new List<GameObject>(test);
-
-        // var test
-
+        test2 = (Test)test1.Clone();
+        test2.x = 20;
+        test2.Testttt.x = 20;
     }
-
-    // Update is called once per frame
-    void Update()
+    [System.Serializable]
+    public class Test
     {
-        Debug.LogError(test.Count + "---" + test1.Count);
+        public int x;
+        public Testttt Testttt;
+        public object Clone()
+        {
+            MemoryStream stream = new MemoryStream();
+            BinaryFormatter formatter = new BinaryFormatter();
+            formatter.Serialize(stream, this);
+            stream.Position = 0;
+            return formatter.Deserialize(stream) as Test;
+        }
+    }
+    [System.Serializable]
+    public class Testttt
+    {
+        public int x;
     }
 }
