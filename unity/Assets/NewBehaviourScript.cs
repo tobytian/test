@@ -18,6 +18,20 @@ public class NewBehaviourScript : MonoBehaviour
     public Test test2;
     void Start()
     {
+        int test=0;
+
+        int a = 1;
+        for (int i = 100; i != 999; i++)
+        {
+            a += i;
+
+
+            test = i;
+        }
+        Debug.LogError(test);
+
+
+        return;
         test1 = new Test();
         test1.x = 10;
         test1.Testttt = new Testttt();
@@ -32,7 +46,7 @@ public class NewBehaviourScript : MonoBehaviour
     {
         public int x;
         public Testttt Testttt;
-        public object Clone()
+        public Test Clone()
         {
             MemoryStream stream = new MemoryStream();
             BinaryFormatter formatter = new BinaryFormatter();
