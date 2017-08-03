@@ -1,34 +1,28 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Test : MonoBehaviour
 {
+    private Action action;
     // Use this for initialization
     void Start()
     {
-        myAsyn test = new myAsyn(Finish);
-
-        StartCoroutine(test);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
+        myAsyn t = new myAsyn(Finish);
+        t.Start();
 
     }
 
-    void Finish(object param)
+    void Finish(object p)
     {
-        Debug.LogError("finish");
+        Debug.Log("finish");
     }
 }
 
 
 public class myAsyn : TestAsyn
 {
-    public myAsyn(Action<object> param) : base(param)
+    public myAsyn(Action<object> param = null) : base(param)
     {
     }
 
@@ -49,7 +43,7 @@ public abstract class TestAsyn : IEnumerator
     private Action<object> action;
     private bool isFinish = false;
     private object asynResult;
-    public TestAsyn(Action<object> param)
+    public TestAsyn(Action<object> param = null)
     {
         action = param;
         isFinish = false;
@@ -57,7 +51,7 @@ public abstract class TestAsyn : IEnumerator
 
     public void Start()
     {
-
+        GameObject.FindObjectOfType<Test>().StartCoroutine(this);
     }
 
     public bool MoveNext()
@@ -80,7 +74,7 @@ public abstract class TestAsyn : IEnumerator
     }
     public void Reset()
     {
-        throw new System.NotImplementedException();
+        //throw new System.NotImplementedException();
     }
 
     public object Current { get; private set; }
