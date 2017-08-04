@@ -2,22 +2,93 @@
 using System.Collections;
 using UnityEngine;
 
+
+using Object = UnityEngine.Object;
+
 public class Test : MonoBehaviour
 {
-    private Action action;
-    // Use this for initialization
+
     void Start()
     {
-        myAsyn t = new myAsyn(Finish);
-        t.Start();
+        var t = new TestLoad("Cube");
+        t.SetAction(Finish);
 
+        StartCoroutine(t);
     }
 
-    void Finish(object p)
+    void Finish(Object p)
     {
         Debug.Log("finish");
+        Instantiate(p);
+    }
+
+    IEnumerator t()
+    {
+        var t = Resources.LoadAsync("");
+        yield return t;
+
+
+
     }
 }
+
+
+
+public class TestLoad : IEnumerator
+{
+    private string path;
+
+    private ResourceRequest asyncOperation;
+
+    private Action<Object> action;
+    public TestLoad(string path)
+    {
+        this.path = path;
+
+        asyncOperation = Resources.LoadAsync(path);
+    }
+
+    public void SetAction(Action<Object> param)
+    {
+        action = param;
+    }
+
+
+    public TestLoad Continue(Func<TestLoad, Object> param)
+    {
+        return new TestLoad(path);
+    }
+
+    public void Finish(Object param)
+    {
+        action(param);
+    }
+
+    public bool MoveNext()
+    {
+        if (!asyncOperation.isDone)
+            return true;
+
+        Finish(asyncOperation.asset);
+        return false;
+    }
+
+    public void Reset()
+    {
+        throw new NotImplementedException();
+    }
+
+    public object Current { get; private set; }
+}
+
+
+
+
+
+
+
+
+
 
 
 public class myAsyn : TestAsyn
