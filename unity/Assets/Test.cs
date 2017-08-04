@@ -5,32 +5,40 @@ using UnityEngine;
 
 using Object = UnityEngine.Object;
 
+
 public class Test : MonoBehaviour
 {
-
     void Start()
     {
-        var t = new TestLoad("Cube");
-        t.SetAction(Finish);
+        var test = new TestLoad("Cube");
+        test.SetAction((Object) =>
+        {
+            Instantiate(Object);
+        });
 
-        StartCoroutine(t);
-    }
-
-    void Finish(Object p)
-    {
-        Debug.Log("finish");
-        Instantiate(p);
-    }
-
-    IEnumerator t()
-    {
-        var t = Resources.LoadAsync("");
-        yield return t;
-
-
+        StartCoroutine(test);
 
     }
+
+
+
+
+
+    //void Start()
+    //{
+    //    TestAction(delegate ()
+    //    {
+    //        Debug.Log("finish");
+    //    });
+    //}
+    //void TestAction(Action param)
+    //{
+    //    param();
+    //}
 }
+
+
+
 
 
 
