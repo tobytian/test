@@ -2,127 +2,64 @@
 using System.Collections;
 using UnityEngine;
 
-
 using Object = UnityEngine.Object;
 
 
 public class Test : MonoBehaviour
 {
+    private int i=1;
+
+
     void Start()
     {
-        var test = new TestLoad("Cube");
-        test.SetAction((Object) =>
+        Debug.LogError("execute");
+
+        _SearchValidTaskFrom(1);
+    }
+
+    private int _SearchValidTaskFrom(int task)
+    {
+        while (true)
         {
-            Instantiate(Object);
-        });
+            if (i == 0)
+            {
+                return 0;
+            }
+            else if (i == 3)
+            {
+                return task;
+            }
 
-        StartCoroutine(test);
-
+            i = 10;
+        }
+        Debug.Log("finish");
     }
 
-
-
-
-
-    //void Start()
-    //{
-    //    TestAction(delegate ()
-    //    {
-    //        Debug.Log("finish");
-    //    });
-    //}
-    //void TestAction(Action param)
-    //{
-    //    param();
-    //}
 }
 
 
-
-
-
-
-public class TestLoad : IEnumerator
+public class LoadAsyn : AsynTask
 {
-    private string path;
+    private ResourceRequest resourceRequest;
 
-    private ResourceRequest asyncOperation;
-
-    private Action<Object> action;
-    public TestLoad(string path)
-    {
-        this.path = path;
-
-        asyncOperation = Resources.LoadAsync(path);
-    }
-
-    public void SetAction(Action<Object> param)
-    {
-        action = param;
-    }
-
-
-    public TestLoad Continue(Func<TestLoad, Object> param)
-    {
-        return new TestLoad(path);
-    }
-
-    public void Finish(Object param)
-    {
-        action(param);
-    }
-
-    public bool MoveNext()
-    {
-        if (!asyncOperation.isDone)
-            return true;
-
-        Finish(asyncOperation.asset);
-        return false;
-    }
-
-    public void Reset()
-    {
-        throw new NotImplementedException();
-    }
-
-    public object Current { get; private set; }
-}
-
-
-
-
-
-
-
-
-
-
-
-public class myAsyn : TestAsyn
-{
-    public myAsyn(Action<object> param = null) : base(param)
-    {
-    }
-
-    private int i = 0;
     public override void Execute()
     {
-        i++;
-        Debug.Log(i);
-        if (i > 100)
-            Finish();
+
     }
 }
 
 
 
-public abstract class TestAsyn : IEnumerator
+public abstract class AsynTask : IEnumerator
 {
-    private Action<object> action;
+    private Action<Object> action;
     private bool isFinish = false;
-    private object asynResult;
-    public TestAsyn(Action<object> param = null)
+    private Object asynResult;
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="param">执行完成的回调</param>
+    public AsynTask(Action<Object> param = null)
     {
         action = param;
         isFinish = false;
@@ -143,10 +80,11 @@ public abstract class TestAsyn : IEnumerator
         action(asynResult);
         return false;
     }
+
     public abstract void Execute();
 
 
-    public void Finish(object param = null)
+    public void Finish(Object param = null)
     {
         asynResult = param;
         isFinish = true;
