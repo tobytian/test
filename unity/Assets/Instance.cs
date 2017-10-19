@@ -4,10 +4,11 @@
 //***************************************************************************
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
-
+using UnityEngine.Assertions;
+using Debug = UnityEngine.Debug;
+using HiA;
 public class Instance : MonoBehaviour
 {
 
@@ -21,14 +22,22 @@ public class Instance : MonoBehaviour
         var tt = Activator.CreateInstance(t);
         var ttt = tt as Test;
         ttt.L();
+
+
+
+        Debug.LogError( typeof(Test).FullName);
     }
 }
 
-
-public class Test
+namespace HiA
 {
-    public void L()
+    public class Test
     {
-        Debug.Log("execute");
+        public void L()
+        {
+            Debug.Log("execute");
+        }
     }
+
+
 }
