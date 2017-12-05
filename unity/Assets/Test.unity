@@ -323,6 +323,47 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!224 &936925800 stripped
+RectTransform:
+  m_PrefabParentObject: {fileID: 224843636492284570, guid: 38c9e297cce3c1f4f81638637af6ab5e,
+    type: 2}
+  m_PrefabInternal: {fileID: 1901883593}
+--- !u!1 &1473852782 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1621630693954048, guid: 38c9e297cce3c1f4f81638637af6ab5e,
+    type: 2}
+  m_PrefabInternal: {fileID: 1901883593}
+--- !u!114 &1473852783
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1473852782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 101656462987c094fbc274182ceab6ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Content: {fileID: 936925800}
+  m_Horizontal: 1
+  m_Vertical: 1
+  m_MovementType: 0
+  m_Elasticity: 0.1
+  m_Inertia: 0
+  m_DecelerationRate: 0.135
+  m_ScrollSensitivity: 1
+  m_Viewport: {fileID: 0}
+  m_HorizontalScrollbar: {fileID: 0}
+  m_VerticalScrollbar: {fileID: 0}
+  m_HorizontalScrollbarVisibility: 0
+  m_VerticalScrollbarVisibility: 0
+  m_HorizontalScrollbarSpacing: 0
+  m_VerticalScrollbarSpacing: 0
+  m_OnValueChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.ScrollRect+ScrollRectEvent, UnityEngine.UI, Version=1.0.0.0,
+      Culture=neutral, PublicKeyToken=null
 --- !u!1 &1542353153
 GameObject:
   m_ObjectHideFlags: 0
@@ -471,7 +512,7 @@ RectTransform:
   m_GameObject: {fileID: 1794009483}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1, z: 90}
-  m_LocalScale: {x: 0.28232288, y: 0.28232288, z: 0.28232288}
+  m_LocalScale: {x: 0.26124448, y: 0.26124448, z: 0.26124448}
   m_Children:
   - {fileID: 181638820}
   m_Father: {fileID: 0}
@@ -578,6 +619,29 @@ Prefab:
         type: 2}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114973576600328166, guid: 38c9e297cce3c1f4f81638637af6ab5e,
+        type: 2}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: f4a8896dc8af45d46a577bba46d9917d,
+        type: 3}
+    - target: {fileID: 114574749259740676, guid: 38c9e297cce3c1f4f81638637af6ab5e,
+        type: 2}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 9dbe4bccd23bc38459ddeb1ebdf23109,
+        type: 3}
+    - target: {fileID: 114451776292052952, guid: 38c9e297cce3c1f4f81638637af6ab5e,
+        type: 2}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 1dbe5d16207d7ed47a226bd854495d31,
+        type: 3}
+    - target: {fileID: 224108958331091714, guid: 38c9e297cce3c1f4f81638637af6ab5e,
+        type: 2}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 38c9e297cce3c1f4f81638637af6ab5e, type: 2}
