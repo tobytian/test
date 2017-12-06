@@ -70,7 +70,10 @@ public class Joystick : ScrollRect
         if (state == EState.End)
         {
             if (HiFloat.IsEqual(content.localPosition.x, 0) && HiFloat.IsEqual(content.localPosition.y, 0))
+            {
                 state = EState.None;
+                content.localPosition = Vector3.zero;
+            }
             float x = Mathf.Lerp(content.localPosition.x, 0.0f, _recoverTime);
             float y = Mathf.Lerp(content.localPosition.y, 0.0f, _recoverTime);
             content.localPosition = new Vector3(x, y, content.localPosition.z);
