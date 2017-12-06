@@ -45,7 +45,7 @@ public class JoystickAnimation : MonoBehaviour
         {
             animator.SetFloat(_horizontal, 0);
             animator.SetFloat(_vertical, 0);
-            transform.eulerAngles = Vector3.zero;
+            transform.localEulerAngles = Vector3.zero;
         }
     }
 
@@ -76,7 +76,7 @@ public class JoystickAnimation : MonoBehaviour
             }
             waggleV.x = x;
             waggleV.y = -y;
-            transform.eulerAngles = waggleV;
+            transform.localEulerAngles = waggleV;
         }
     }
 }
