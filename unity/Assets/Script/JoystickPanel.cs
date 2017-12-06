@@ -24,7 +24,7 @@ public class JoystickPanel : MonoBehaviour
 
     }
 
-    void OnDraggingEvent(Vector2 v)
+    void OnDraggingEvent(Vector3 v)
     {
         animator.SetFloat("x", v.x);
         animator.SetFloat("y", v.y);
