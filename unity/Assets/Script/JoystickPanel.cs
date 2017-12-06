@@ -10,6 +10,8 @@ public class JoystickPanel : MonoBehaviour
     [SerializeField]
     private Joystick joystick;
     private Animator animator;
+    private string _horizontal = "horizontal";
+    private string _vertical = "vertical";
     // Use this for initialization
     void Start()
     {
@@ -28,18 +30,16 @@ public class JoystickPanel : MonoBehaviour
     {
         float rate = 1 / 0.7f;
         v *= rate;
-        animator.SetFloat("x", v.x);
-        animator.SetFloat("y", v.y);
-
-        Debug.LogError(v);
+        animator.SetFloat(_horizontal, v.x);
+        animator.SetFloat(_vertical, v.y);
     }
 
     void OnStateChangeEvent(Joystick.EState state)
     {
         if (state == Joystick.EState.End)
         {
-            animator.SetFloat("x", 0);
-            animator.SetFloat("y", 0);
+            animator.SetFloat(_horizontal, 0);
+            animator.SetFloat(_vertical, 0);
         }
     }
 }
