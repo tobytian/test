@@ -4,7 +4,7 @@
 //****************************************************************************
 
 using UnityEngine;
-public class JoystickPanel : MonoBehaviour
+public class JoystickAnimation : MonoBehaviour
 {
     [SerializeField]
     private Joystick joystick;
