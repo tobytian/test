@@ -11,7 +11,7 @@ using UnityEngine.UI;
 public class Joystick : ScrollRect
 {
     public event Action<EState> StateChangeHandler;
-    public event Action<Vector3> DraggingHandler;
+    public event Action<Vector2> DraggingHandler;
 
     private float _recoverTime = 0.1f;//摇杆恢复时间
     private float _radius;
@@ -25,10 +25,10 @@ public class Joystick : ScrollRect
         End,//结束拖拽
     }
 
-    void Start()
+    void Awake()
     {
-        inertia = false;
-        movementType = MovementType.Unrestricted;
+        //inertia = false;
+        //movementType = MovementType.Unrestricted;
         _radius = (transform as RectTransform).sizeDelta.x * 0.5f;
     }
 
@@ -91,6 +91,10 @@ public class Joystick : ScrollRect
     void ProcessDraggingHandler()
     {
         if (DraggingHandler != null)
-            DraggingHandler(_contentOffset);
+        {
+            double rate1 = 1 / (Math.Pow(_contentOffset.x, 2) + Math.Pow(_contentOffset.y, 2));
+            float rate = (float)rate1;
+            DraggingHandler(new Vector2(_contentOffset.x * rate, _contentOffset.y * rate));
+        }
     }
 }
