@@ -12,7 +12,6 @@ public class Joystick : ScrollRect
 {
     public EState State { get; private set; }
     public event Action<Vector3> DraggingHandler;
-    private float _recoverTime = 0.1f;//摇杆恢复时间
     private float _radius;
     private Vector3 _contentOffset = Vector3.zero;
     public enum EState
@@ -23,10 +22,9 @@ public class Joystick : ScrollRect
         End,//结束拖拽
     }
 
-    void Awake()
+    protected override void Awake()
     {
-        //inertia = false;
-        //movementType = MovementType.Unrestricted;
+        base.Awake();
         _radius = (transform as RectTransform).sizeDelta.x * 0.5f;
     }
 
@@ -56,23 +54,7 @@ public class Joystick : ScrollRect
     }
     void Update()
     {
-        RecoverContent();
         UpdateContentOffset();
-    }
-
-    void RecoverContent()
-    {
-        if (State == EState.End)
-        {
-            if (HiFloat.IsEqual(content.localPosition.x, 0) && HiFloat.IsEqual(content.localPosition.y, 0))
-            {
-                State = EState.None;
-                content.localPosition = Vector3.zero;
-            }
-            float x = Mathf.Lerp(content.localPosition.x, 0.0f, _recoverTime);
-            float y = Mathf.Lerp(content.localPosition.y, 0.0f, _recoverTime);
-            content.localPosition = new Vector3(x, y, content.localPosition.z);
-        }
     }
 
     void UpdateContentOffset()
