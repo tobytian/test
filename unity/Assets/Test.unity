@@ -384,7 +384,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 70781507}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -20}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1232054808}
@@ -547,7 +547,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79e7edf6500da5641bf4194717691c80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  joystick: {fileID: 0}
+  joystick: {fileID: 1232054811}
 --- !u!1 &1542353153
 GameObject:
   m_ObjectHideFlags: 0
@@ -696,7 +696,7 @@ RectTransform:
   m_GameObject: {fileID: 1794009483}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1, z: 0}
-  m_LocalScale: {x: 0.26729178, y: 0.26729178, z: 0.26729178}
+  m_LocalScale: {x: 0.3280399, y: 0.3280399, z: 0.3280399}
   m_Children:
   - {fileID: 181638820}
   m_Father: {fileID: 0}
@@ -733,7 +733,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1916147958}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.9999899, y: 0.9999899, z: 0.9999899}
   m_Children: []
   m_Father: {fileID: 1232054808}

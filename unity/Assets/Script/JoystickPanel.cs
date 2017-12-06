@@ -26,6 +26,8 @@ public class JoystickPanel : MonoBehaviour
 
     void OnDraggingEvent(Vector3 v)
     {
+        float rate = 1 / 0.7f;
+        v *= rate;
         animator.SetFloat("x", v.x);
         animator.SetFloat("y", v.y);
 
