@@ -10,13 +10,11 @@ using UnityEngine.UI;
 
 public class Joystick : ScrollRect
 {
-    public event Action<EState> StateChangeHandler;
+    public EState State { get; private set; }
     public event Action<Vector3> DraggingHandler;
-
     private float _recoverTime = 0.1f;//摇杆恢复时间
     private float _radius;
     private Vector3 _contentOffset = Vector3.zero;
-    private EState state = EState.None;
     public enum EState
     {
         None,
@@ -35,22 +33,19 @@ public class Joystick : ScrollRect
     public override void OnBeginDrag(PointerEventData eventData)
     {
         base.OnBeginDrag(eventData);
-        state = EState.Start;
-        ProcessStateChangeHandler();
+        State = EState.Start;
     }
 
     public override void OnEndDrag(PointerEventData eventData)
     {
         base.OnEndDrag(eventData);
-        state = EState.End;
-        ProcessStateChangeHandler();
+        State = EState.End;
     }
 
     public override void OnDrag(PointerEventData eventData)
     {
         base.OnDrag(eventData);
-        state = EState.Dragging;
-        ProcessStateChangeHandler();
+        State = EState.Dragging;
         ProcessDraggingHandler();
         var contentPostion = this.content.anchoredPosition;
         if (contentPostion.magnitude > _radius)
@@ -67,11 +62,11 @@ public class Joystick : ScrollRect
 
     void RecoverContent()
     {
-        if (state == EState.End)
+        if (State == EState.End)
         {
             if (HiFloat.IsEqual(content.localPosition.x, 0) && HiFloat.IsEqual(content.localPosition.y, 0))
             {
-                state = EState.None;
+                State = EState.None;
                 content.localPosition = Vector3.zero;
             }
             float x = Mathf.Lerp(content.localPosition.x, 0.0f, _recoverTime);
@@ -83,12 +78,6 @@ public class Joystick : ScrollRect
     void UpdateContentOffset()
     {
         _contentOffset = content.localPosition / _radius;
-    }
-
-    void ProcessStateChangeHandler()
-    {
-        if (StateChangeHandler != null)
-            StateChangeHandler(state);
     }
 
     void ProcessDraggingHandler()
