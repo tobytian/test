@@ -9,20 +9,17 @@ using UnityEngine.EventSystems;
 public class DragObject : MonoBehaviour, IDragHandler
 {
     public Canvas myCanvas;
-
+    [Range(0, 90)]//不可能射线垂直
     public float x;//x轴倾斜
+    [Range(0, 90)]//不可能射线垂直
     public float y;//y轴倾斜
-    private float _screenWidth, _screenHeight;
+
     private float _imageWidth, _imageHeight;
     // Use this for initialization
     void Start()
     {
-        _screenWidth = Screen.width;
-        _screenHeight = Screen.height;
         _imageWidth = GetComponent<RectTransform>().sizeDelta.x;
         _imageHeight = GetComponent<RectTransform>().sizeDelta.y;
-        Debug.LogError(_imageWidth);
-        Debug.Log(_imageHeight);
     }
 
     // Update is called once per frame
@@ -37,21 +34,31 @@ public class DragObject : MonoBehaviour, IDragHandler
         //Debug.LogError(Input.mousePosition);
         //transform.position = Input.mousePosition;
 
-        if (Input.mousePosition.x - _screenWidth / 2f < -_screenWidth / 2f)
-            mousePosition.x = Input.mousePosition.x + _imageWidth / 2f;
-        else if (Input.mousePosition.x + _screenWidth / 2f > _screenWidth / 2f)
-            mousePosition.x = Input.mousePosition.x - _imageWidth / 2f;
+        if (Input.mousePosition.x - _imageWidth / 2f < 0)
+        {
+            //mousePosition.x = Input.mousePosition.x + _imageWidth / 2f;
+            mousePosition.x = _imageWidth / 2f;
+            Debug.LogError("left out of range");
+        }
+        else if (Input.mousePosition.x + _imageWidth / 2f > Screen.width)
+        {
+            mousePosition.x = Screen.width - _imageWidth / 2f;
+            Debug.LogError("right out of range");
+        }
+        mousePosition.y = Input.mousePosition.y;
 
 
+        Debug.LogError(Input.mousePosition);
 
+        mousePosition = Input.mousePosition;
         Vector2 pos;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(myCanvas.transform as RectTransform, mousePosition, myCanvas.worldCamera, out pos);
         transform.position = myCanvas.transform.TransformPoint(pos);
 
 
-        return;
-        var xAngle = pos.x / (_screenWidth / 2f) * x;
-        var yAngle = pos.y / (_screenHeight / 2) * y;
+        //return;
+        var xAngle = pos.x / (Screen.width / 2f) * x;
+        var yAngle = pos.y / (Screen.height / 2) * y;
         transform.eulerAngles = new Vector3(-yAngle, xAngle, 0);
     }
 }
