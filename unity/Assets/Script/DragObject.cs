@@ -8,16 +8,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class DragObject : MonoBehaviour, IDragHandler, IBeginDragHandler
+public class DragObject : MonoBehaviour, IDragHandler
 {
-    private RectTransform dragAreaInternal;
-
-    private RectTransform dragObjectInternal;
+    private RectTransform rectTransform;
     // Use this for initialization
     void Start()
     {
-        //dragAreaInternal = GetComponent<RectTransform>();
-        //dragObjectInternal = GetComponent<RectTransform>();
+        rectTransform = GetComponent<RectTransform>();
     }
 
     // Update is called once per frame
@@ -25,21 +22,25 @@ public class DragObject : MonoBehaviour, IDragHandler, IBeginDragHandler
     {
 
     }
-    private Vector2 originalLocalPointerPosition;
-    private Vector3 originalPanelLocalPosition;
     public void OnDrag(PointerEventData data)
     {
+        //Debug.LogError(Input.mousePosition);
 
-        var v = Camera.main.WorldToScreenPoint(Input.mousePosition);
 
-        Debug.LogError(Input.mousePosition);
+        Vector2 localpoint;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, Input.mousePosition, GetComponentInParent<Canvas>().worldCamera, out localpoint);
 
-        transform.GetComponent<RectTransform>().anchoredPosition = new Vector2(v.x, v.y);
+        Vector2 normalizedPoint = Rect.PointToNormalized(rectTransform.rect, localpoint);
 
+        Debug.Log(normalizedPoint);
+
+
+
+        rectTransform.position = normalizedPoint;
     }
-    public void OnBeginDrag(PointerEventData data)
+
+    public void OnBeginDrag(PointerEventData eventData)
     {
-        //originalPanelLocalPosition = dragObjectInternal.localPosition;
-        //RectTransformUtility.ScreenPointToLocalPointInRectangle(dragAreaInternal, data.position, data.pressEventCamera, out originalLocalPointerPosition);
+        // throw new System.NotImplementedException();
     }
 }
