@@ -3,8 +3,6 @@
 // Author: hiramtan@live.com
 //****************************************************************************
 
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -26,6 +24,11 @@ public class DragObject : MonoBehaviour, IDragHandler
     {
         //Debug.LogError(Input.mousePosition);
 
+
+        transform.position = Input.mousePosition;
+
+
+        return;
 
         Vector2 localpoint;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, Input.mousePosition, GetComponentInParent<Canvas>().worldCamera, out localpoint);
