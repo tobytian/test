@@ -32,33 +32,42 @@ public class DragObject : MonoBehaviour, IDragHandler
     {
         //Debug.Log(Screen.width + "-" + Screen.height);
         //Debug.LogError(Input.mousePosition);
-        //transform.position = Input.mousePosition;
-
-        if (Input.mousePosition.x - _imageWidth / 2f < 0)
+        #region Move
+        if (Input.mousePosition.x - _imageWidth / 2f < 0)//left
         {
-            //mousePosition.x = Input.mousePosition.x + _imageWidth / 2f;
             mousePosition.x = _imageWidth / 2f;
-            Debug.LogError("left out of range");
         }
         else if (Input.mousePosition.x + _imageWidth / 2f > Screen.width)
         {
             mousePosition.x = Screen.width - _imageWidth / 2f;
-            Debug.LogError("right out of range");
         }
-        mousePosition.y = Input.mousePosition.y;
+        else
+        {
+            mousePosition.x = Input.mousePosition.x;
+        }
 
-
-        Debug.LogError(Input.mousePosition);
-
-        mousePosition = Input.mousePosition;
+        if (Input.mousePosition.y + _imageHeight / 2f > Screen.height) //up
+        {
+            mousePosition.y = Screen.height - _imageWidth / 2f;
+        }
+        else if (Input.mousePosition.y - _imageHeight / 2f < 0)
+        {
+            mousePosition.y = _imageHeight / 2f;
+        }
+        else
+        {
+            mousePosition.y = Input.mousePosition.y;
+        }
+        //mousePosition = Input.mousePosition;
         Vector2 pos;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(myCanvas.transform as RectTransform, mousePosition, myCanvas.worldCamera, out pos);
         transform.position = myCanvas.transform.TransformPoint(pos);
+        #endregion
 
-
-        //return;
+        #region Rotate
         var xAngle = pos.x / (Screen.width / 2f) * x;
         var yAngle = pos.y / (Screen.height / 2) * y;
         transform.eulerAngles = new Vector3(-yAngle, xAngle, 0);
+        #endregion
     }
 }
