@@ -29,7 +29,11 @@ public class DragObject : MonoBehaviour, IDragHandler
         Vector2 pos;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(myCanvas.transform as RectTransform, Input.mousePosition, myCanvas.worldCamera, out pos);
         transform.position = myCanvas.transform.TransformPoint(pos);
+        //transform.position = myCanvas.transform.TransformPoint(pos);
 
+
+
+        Debug.LogError(pos);
 
     }
 
