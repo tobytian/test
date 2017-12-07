@@ -8,11 +8,11 @@ using UnityEngine.EventSystems;
 
 public class DragObject : MonoBehaviour, IDragHandler
 {
-    private RectTransform rectTransform;
+
+    public Canvas myCanvas;
     // Use this for initialization
     void Start()
     {
-        rectTransform = GetComponent<RectTransform>();
     }
 
     // Update is called once per frame
@@ -23,23 +23,14 @@ public class DragObject : MonoBehaviour, IDragHandler
     public void OnDrag(PointerEventData data)
     {
         //Debug.LogError(Input.mousePosition);
+        //transform.position = Input.mousePosition;
 
 
-        transform.position = Input.mousePosition;
+        Vector2 pos;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(myCanvas.transform as RectTransform, Input.mousePosition, myCanvas.worldCamera, out pos);
+        transform.position = myCanvas.transform.TransformPoint(pos);
 
 
-        return;
-
-        Vector2 localpoint;
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, Input.mousePosition, GetComponentInParent<Canvas>().worldCamera, out localpoint);
-
-        Vector2 normalizedPoint = Rect.PointToNormalized(rectTransform.rect, localpoint);
-
-        Debug.Log(normalizedPoint);
-
-
-
-        rectTransform.position = normalizedPoint;
     }
 
     public void OnBeginDrag(PointerEventData eventData)
