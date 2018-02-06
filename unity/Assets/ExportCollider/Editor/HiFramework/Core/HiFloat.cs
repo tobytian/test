@@ -10,9 +10,9 @@ namespace HiFramework
         /// <summary>
         /// 保留小数点后6位,第7位四舍五入
         /// </summary>
-        private const int Length = 6;
+        private const int Length = 2;
         private float _value;
-        private HiFloat(float param)
+        public HiFloat(float param)
         {
             _value = (float)Math.Round(param, Length);
         }
