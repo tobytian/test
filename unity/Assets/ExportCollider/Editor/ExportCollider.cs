@@ -70,21 +70,30 @@ public class ExportCollider
         for (int i = 0; i < _capsuleCollider.Count; i++)
         {
             var id = i + 1;
-            HiFloat px = new HiFloat(_capsuleCollider[i].center.x * _clientToServer);
-            HiFloat py = new HiFloat(_capsuleCollider[i].center.z * _clientToServer);
+            HiFloat px = new HiFloat(_capsuleCollider[i].gameObject.transform.position.x * _clientToServer);
+            px /= _clientToServer;
+            HiFloat py = new HiFloat(_capsuleCollider[i].gameObject.transform.position.z * _clientToServer);
+            py /= _clientToServer;
             HiFloat radius = new HiFloat(_capsuleCollider[i].radius);
             Debug.Log("id: " + id);
             Debug.Log("px" + px);
             Debug.Log("py" + py);
             Debug.Log("radius" + radius);
+            string pxS = px.ToString();
+            if (px % 1 == 0)
+                pxS += ".0";
+            string pyS = py.ToString();
+            if (py % 1 == 0)
+                pyS += ".0";
+
             string context = "{" + "\n"
                              + "\"" + "id" + "\"" + ":" + _id + "," + "\n"
                              + "\"" + "type" + "\"" + ":" + 1 + "," + "\n"
                              + "\"" + "layer" + "\"" + ":" + 1 + "," + "\n"
                              + "\"" + "description" + "\"" + ":" + "\"" + "dashu (39)" + "\"" + "," + "\n"
                              + "\"" + "properties" + "\"" + ":" + "{}" + "," + "\n"
-                             + "\"" + "px" + "\"" + ":" + px + "," + "\n"
-                             + "\"" + "px" + "\"" + ":" + py + "," + "\n"
+                             + "\"" + "px" + "\"" + ":" + pxS + "," + "\n"
+                             + "\"" + "py" + "\"" + ":" + pyS + "," + "\n"
                              + "\"" + "radius" + "\"" + ":" + radius + "," + "\n"
                              + "\"" + "scale" + "\"" + ":" + 1 + "," + "\n"
                              + "\"" + "angle" + "\"" + ":" + 0 + "\n"
@@ -97,8 +106,8 @@ public class ExportCollider
                           + "\"" + "layer" + "\"" + ":" + 1 + "," + "\n"
                           + "\"" + "description" + "\"" + ":" + "\"" + "dashu (39)" + "\"" + "," + "\n"
                           + "\"" + "properties" + "\"" + ":" + "{}" + "," + "\n"
-                          + "\"" + "px" + "\"" + ":" + px + "," + "\n"
-                          + "\"" + "px" + "\"" + ":" + py + "," + "\n"
+                          + "\"" + "px" + "\"" + ":" + pxS + "," + "\n"
+                          + "\"" + "py" + "\"" + ":" + pyS + "," + "\n"
                           + "\"" + "radius" + "\"" + ":" + radius + "," + "\n"
                           + "\"" + "scale" + "\"" + ":" + 1 + "," + "\n"
                           + "\"" + "angle" + "\"" + ":" + 0 + "\n"
