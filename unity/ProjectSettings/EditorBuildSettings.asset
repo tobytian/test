@@ -4,7 +4,4 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes:
-  - enabled: 0
-    path: Assets/Test/TestShootButton01.unity
-    guid: 57a174a9c5d89b74599e4cca8e8d0e40
+  m_Scenes: []
