@@ -9,9 +9,10 @@ using UnityEngine;
 public class HelloWorldSystem : ReactiveSystem<GameEntity>
 {
     private Contexts _contexts;
-    public HelloWorldSystem(IContext<GameEntity> context) : base(context)
-    {
+
+    public HelloWorldSystem(Contexts contexts) : base(contexts.game){
     }
+
     protected override ICollector<GameEntity> GetTrigger(IContext<GameEntity> context)
     {
         return context.CreateCollector(GameMatcher.HelloWorld);

@@ -10,6 +10,6 @@ public class RootSystems : Feature
     public RootSystems(Contexts contexts)
     {
         Add(new CreatSystem(contexts));
-        Add(new HelloWorldSystem(contexts.game));
+        Add(new HelloWorldSystem(contexts));
     }
 }
