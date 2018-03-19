@@ -9,14 +9,13 @@ using UnityEngine;
 
 public class Main : MonoBehaviour
 {
-    private RootSystem s;
+    private RootSystems s;
     // Use this for initialization
     void Start()
     {
-        s = new RootSystem(Contexts.sharedInstance);
+        s = new RootSystems(Contexts.sharedInstance);
         s.Initialize();
     }
-
     // Update is called once per frame
     void Update()
     {

@@ -3,32 +3,28 @@
 // Author: hiramtan@live.com
 //****************************************************************************
 
-using System.Collections;
 using System.Collections.Generic;
 using Entitas;
 using UnityEngine;
-
-public class TestLogSystem:ReactiveSystem<GameEntity>
+public class HelloWorldSystem : ReactiveSystem<GameEntity>
 {
-    public TestLogSystem(IContext<GameEntity> context) : base(context)
+    private Contexts _contexts;
+    public HelloWorldSystem(IContext<GameEntity> context) : base(context)
     {
     }
-
     protected override ICollector<GameEntity> GetTrigger(IContext<GameEntity> context)
     {
-         return context.CreateCollector(GameMatcher.Hp);
+        return context.CreateCollector(GameMatcher.HelloWorld);
     }
-
     protected override bool Filter(GameEntity entity)
     {
-        return entity.hasHp;
+        return entity.hasHelloWorld;
     }
-
     protected override void Execute(List<GameEntity> entities)
     {
-        foreach (var VARIABLE in entities)
+        foreach (var e in entities)
         {
-            Debug.Log(VARIABLE.hp.hp);
+            Debug.Log(e.helloWorld.s);
         }
     }
 }

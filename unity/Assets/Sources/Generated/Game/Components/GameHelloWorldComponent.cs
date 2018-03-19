@@ -8,25 +8,25 @@
 //------------------------------------------------------------------------------
 public partial class GameEntity {
 
-    public HpComponent hp { get { return (HpComponent)GetComponent(GameComponentsLookup.Hp); } }
-    public bool hasHp { get { return HasComponent(GameComponentsLookup.Hp); } }
+    public HelloWorldComponent helloWorld { get { return (HelloWorldComponent)GetComponent(GameComponentsLookup.HelloWorld); } }
+    public bool hasHelloWorld { get { return HasComponent(GameComponentsLookup.HelloWorld); } }
 
-    public void AddHp(int newHp) {
-        var index = GameComponentsLookup.Hp;
-        var component = CreateComponent<HpComponent>(index);
-        component.hp = newHp;
+    public void AddHelloWorld(string newS) {
+        var index = GameComponentsLookup.HelloWorld;
+        var component = CreateComponent<HelloWorldComponent>(index);
+        component.s = newS;
         AddComponent(index, component);
     }
 
-    public void ReplaceHp(int newHp) {
-        var index = GameComponentsLookup.Hp;
-        var component = CreateComponent<HpComponent>(index);
-        component.hp = newHp;
+    public void ReplaceHelloWorld(string newS) {
+        var index = GameComponentsLookup.HelloWorld;
+        var component = CreateComponent<HelloWorldComponent>(index);
+        component.s = newS;
         ReplaceComponent(index, component);
     }
 
-    public void RemoveHp() {
-        RemoveComponent(GameComponentsLookup.Hp);
+    public void RemoveHelloWorld() {
+        RemoveComponent(GameComponentsLookup.HelloWorld);
     }
 }
 
@@ -40,17 +40,17 @@ public partial class GameEntity {
 //------------------------------------------------------------------------------
 public sealed partial class GameMatcher {
 
-    static Entitas.IMatcher<GameEntity> _matcherHp;
+    static Entitas.IMatcher<GameEntity> _matcherHelloWorld;
 
-    public static Entitas.IMatcher<GameEntity> Hp {
+    public static Entitas.IMatcher<GameEntity> HelloWorld {
         get {
-            if (_matcherHp == null) {
-                var matcher = (Entitas.Matcher<GameEntity>)Entitas.Matcher<GameEntity>.AllOf(GameComponentsLookup.Hp);
+            if (_matcherHelloWorld == null) {
+                var matcher = (Entitas.Matcher<GameEntity>)Entitas.Matcher<GameEntity>.AllOf(GameComponentsLookup.HelloWorld);
                 matcher.componentNames = GameComponentsLookup.componentNames;
-                _matcherHp = matcher;
+                _matcherHelloWorld = matcher;
             }
 
-            return _matcherHp;
+            return _matcherHelloWorld;
         }
     }
 }

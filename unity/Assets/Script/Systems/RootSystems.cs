@@ -3,12 +3,13 @@
 // Author: hiramtan@live.com
 //****************************************************************************
 
-using System.Collections;
-using System.Collections.Generic;
 using Entitas;
-using UnityEngine;
 
-public class HpComponent : IComponent
+public class RootSystems : Feature
 {
-    public int hp;
+    public RootSystems(Contexts contexts)
+    {
+        Add(new CreatSystem(contexts));
+        Add(new HelloWorldSystem(contexts.game));
+    }
 }

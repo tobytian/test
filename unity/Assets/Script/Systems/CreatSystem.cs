@@ -3,22 +3,17 @@
 // Author: hiramtan@live.com
 //****************************************************************************
 
-using System.Collections;
-using System.Collections.Generic;
 using Entitas;
-using UnityEngine;
-
-public class CreateSystem : IInitializeSystem
+public class CreatSystem : IInitializeSystem
 {
     private Contexts _contexts;
-    public CreateSystem(Contexts contexts)
+    public CreatSystem(Contexts contexts)
     {
         _contexts = contexts;
     }
-
     public void Initialize()
     {
-       var e= _contexts.game.CreateEntity();
-        e.AddHp(100);
+        var e = _contexts.game.CreateEntity();
+        e.AddHelloWorld("hello world");
     }
 }
