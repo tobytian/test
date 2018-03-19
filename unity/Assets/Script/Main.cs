@@ -7,12 +7,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InputSystems : Feature
+public class Main : MonoBehaviour
 {
-    public InputSystems(Contexts contexts) : base("input system")
+
+    // Use this for initialization
+    void Start()
     {
-        Add(new EmitInputSystem(contexts));
-        Add(new CreateMoverSystem(contexts));
-        Add(new CommandMoveSystem(contexts));
+        var context = Contexts.sharedInstance.game;
+        var e = context.CreateEntity();
+        e.AddHp(100);
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
     }
 }

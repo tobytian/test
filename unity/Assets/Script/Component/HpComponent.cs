@@ -5,12 +5,10 @@
 
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using Entitas;
-public class MovementSystems:Feature
+using UnityEngine;
+
+public class HpComponent : IComponent
 {
-    public MovementSystems(Contexts contexts) : base("movement system")
-    {
-        Add(new MoveSystem(contexts));
-    }
+    public int hp;
 }
