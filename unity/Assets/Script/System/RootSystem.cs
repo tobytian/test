@@ -7,19 +7,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Main : MonoBehaviour
+public class RootSystem : Feature
 {
-    private RootSystem s;
-    // Use this for initialization
-    void Start()
+    public RootSystem(Contexts contexts)
     {
-        s = new RootSystem(Contexts.sharedInstance);
-        s.Initialize();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        s.Execute();
+        Add(new TestLogSystem(contexts.game));
+        Add(new CreateSystem(contexts));
     }
 }

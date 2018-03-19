@@ -5,21 +5,20 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using Entitas;
 using UnityEngine;
 
-public class Main : MonoBehaviour
+public class CreateSystem : IInitializeSystem
 {
-    private RootSystem s;
-    // Use this for initialization
-    void Start()
+    private Contexts _contexts;
+    public CreateSystem(Contexts contexts)
     {
-        s = new RootSystem(Contexts.sharedInstance);
-        s.Initialize();
+        _contexts = contexts;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Initialize()
     {
-        s.Execute();
+       var e= _contexts.game.CreateEntity();
+        e.AddHp(100);
     }
 }
