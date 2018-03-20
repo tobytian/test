@@ -11,5 +11,7 @@ public class RootSystems : Feature
     {
         Add(new CreatSystem(contexts));
         Add(new HelloWorldSystem(contexts));
+        Add(new CleanupSystem(contexts));
+        Add(new LogMouseSystem(contexts));
     }
 }
