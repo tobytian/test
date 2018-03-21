@@ -30,12 +30,20 @@ public class CommandMoveSystem:ReactiveSystem<InputEntity>
 
     protected override void Execute(List<InputEntity> entities)
     {
-        foreach (var e in entities)
+        foreach (InputEntity e in entities)
         {
-            GameEntity[] mover = _movers.GetEntities();
-            if (mover.Length <= 0) return;
-            mover[Random.Range(0,mover.Length)].ReplaceMove(e.mouseDown.postion);
+            GameEntity[] movers = _movers.GetEntities();
+            if (movers.Length <= 0) return;
 
+            GameEntity mover = movers[Random.Range(0, movers.Length)];
+            if (mover.hasMove)
+            {
+                mover.ReplaceMove(e.mouseDown.postion);
+            }
+            else
+            {
+                mover.AddMove(e.mouseDown.postion);
+            }
         }
     }
 }
