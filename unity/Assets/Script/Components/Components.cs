@@ -43,7 +43,7 @@ public class MoverComponent : IComponent
 [Game]
 public class MoveComponent : IComponent
 {
-
+    public Vector2 target;
 }
 
 [Game]
