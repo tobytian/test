@@ -11,7 +11,7 @@ using Entitas.CodeGeneration.Attributes;
 using UnityEngine;
 
 [Game]
-public class PositionComPonent : IComponent
+public class PositionComponent : IComponent
 {
     public Vector2 value;
 }
@@ -49,7 +49,7 @@ public class MoveComponent : IComponent
 [Game]
 public class MoveCompleteComponent : IComponent
 {
-    
+
 }
 
 [Input, Unique]
