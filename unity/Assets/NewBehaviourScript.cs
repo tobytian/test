@@ -8,19 +8,18 @@ public class NewBehaviourScript : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        var x = 1;
-        var y = 2;
-        var z = x | y;
-        Debug.Log(z);
-
-        return;
-        int[] test = new[] { 0, 0 };
+        int[] test = new[] {1 };
         BitArray bitArray = new BitArray(test);
-        Debug.Log(bitArray.Count);
+
+        int[] test1 = new[] { 2 };
+        BitArray bitArray1 = new BitArray(test1);
+
+        var result = bitArray.Or(bitArray1);
+
         string s = "";
-        for (int i = bitArray.Count; i > 0; i--)
+        for (int i = result.Count; i > 0; i--)
         {
-            var value = bitArray[i - 1] ? 1 : 0;
+            var value = result[i - 1] ? 1 : 0;
             s += value;
         }
         Debug.Log(s);
