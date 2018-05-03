@@ -8,7 +8,13 @@ public class NewBehaviourScript : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        int[] test = new[] { 1 };
+        var x = 1;
+        var y = 2;
+        var z = x | y;
+        Debug.Log(z);
+
+        return;
+        int[] test = new[] { 0, 0 };
         BitArray bitArray = new BitArray(test);
         Debug.Log(bitArray.Count);
         string s = "";
