@@ -273,51 +273,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Core\Simulation\Physics\Core\Editor\EditorLSBody.cs" />
-    <Compile Include="Assets\Core\Simulation\Physics\Core\Legacy\Editor\LegacyEditorLSBody.cs" />
-    <Compile Include="Assets\Core\Utility\PathObject\Core\Editor\EditorPathObject.cs" />
-    <Compile Include="Assets\Core\Utility\PathObject\Core\Editor\PathObjectUtility.cs" />
-    <Compile Include="Assets\Core\Utility\Serialization\Editor\Injector.cs" />
-    <Compile Include="Assets\Database\Editor\DataHelper.cs" />
-    <Compile Include="Assets\Database\Editor\DataItemInfo.cs" />
-    <Compile Include="Assets\Database\Editor\EditorDataCode.cs" />
-    <Compile Include="Assets\Database\Editor\EditorDataItem.cs" />
-    <Compile Include="Assets\Database\Editor\EditorLSDatabase.cs" />
-    <Compile Include="Assets\Database\Editor\EditorLSDatabaseWindow.cs" />
-    <Compile Include="Assets\Database\Editor\IEditorDatabase.cs" />
-    <Compile Include="Assets\Integration\Editor\CustomPropertyDrawers\CustomPropertyDrawers.cs" />
-    <Compile Include="Assets\Integration\Editor\CustomPropertyDrawers\Scene\EditorLocalVisualize.cs" />
-    <Compile Include="Assets\Integration\Editor\CustomPropertyDrawers\Scene\LSScenePropertyDrawer.cs" />
-    <Compile Include="Assets\Integration\Editor\EditorCerealBehaviour.cs" />
-    <Compile Include="Assets\Integration\Editor\EditorLSProjectile.cs" />
-    <Compile Include="Assets\Integration\Editor\LSEditorUtility.cs" />
-    <Compile Include="Assets\Integration\Environment\Editor\EditorEnvironmentHelper.cs" />
-    <Compile Include="Assets\Integration\Environment\Heightmap\Editor\EditorHeightmapSaver.cs" />
-    <Compile Include="Assets\Integration\Rotorz\ClassTypeReference\ClassTypeReference\Editor\ClassTypeReferencePropertyDrawer.cs" />
-    <Compile Include="Assets\Integration\Rotorz\ReorderableList\Editor\Element Adder Menu\ElementAdderMenuBuilder.cs" />
-    <Compile Include="Assets\Integration\Rotorz\ReorderableList\Editor\Element Adder Menu\ElementAdderMenuCommandAttribute.cs" />
-    <Compile Include="Assets\Integration\Rotorz\ReorderableList\Editor\Element Adder Menu\ElementAdderMeta.cs" />
-    <Compile Include="Assets\Integration\Rotorz\ReorderableList\Editor\Element Adder Menu\GenericElementAdderMenu.cs" />
-    <Compile Include="Assets\Integration\Rotorz\ReorderableList\Editor\Element Adder Menu\GenericElementAdderMenuBuilder.cs" />
-    <Compile Include="Assets\Integration\Rotorz\ReorderableList\Editor\Element Adder Menu\IElementAdder.cs" />
-    <Compile Include="Assets\Integration\Rotorz\ReorderableList\Editor\Element Adder Menu\IElementAdderMenu.cs" />
-    <Compile Include="Assets\Integration\Rotorz\ReorderableList\Editor\Element Adder Menu\IElementAdderMenuBuilder.cs" />
-    <Compile Include="Assets\Integration\Rotorz\ReorderableList\Editor\Element Adder Menu\IElementAdderMenuCommand.cs" />
-    <Compile Include="Assets\Integration\Rotorz\ReorderableList\Editor\GenericListAdaptor.cs" />
-    <Compile Include="Assets\Integration\Rotorz\ReorderableList\Editor\Internal\GUIHelper.cs" />
-    <Compile Include="Assets\Integration\Rotorz\ReorderableList\Editor\Internal\ReorderableListResources.cs" />
-    <Compile Include="Assets\Integration\Rotorz\ReorderableList\Editor\Internal\SerializedPropertyUtility.cs" />
-    <Compile Include="Assets\Integration\Rotorz\ReorderableList\Editor\IReorderableListAdaptor.cs" />
-    <Compile Include="Assets\Integration\Rotorz\ReorderableList\Editor\IReorderableListDropTarget.cs" />
-    <Compile Include="Assets\Integration\Rotorz\ReorderableList\Editor\ReorderableListControl.cs" />
-    <Compile Include="Assets\Integration\Rotorz\ReorderableList\Editor\ReorderableListEvents.cs" />
-    <Compile Include="Assets\Integration\Rotorz\ReorderableList\Editor\ReorderableListGUI.cs" />
-    <Compile Include="Assets\Integration\Rotorz\ReorderableList\Editor\ReorderableListStyles.cs" />
-    <Compile Include="Assets\Integration\Rotorz\ReorderableList\Editor\SerializedPropertyAdaptor.cs" />
-    <Compile Include="Assets\Settings\Editor\LSFSettingsModifier.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Assets\Core\Game\Player\Visuals\RTS 3D Arrow\Shader\ArrowShader.shader" />
+    <Compile Include="Assets\Editor\EditorBoundingBox.cs" />
+    <Compile Include="Assets\Editor\EditorGameManager.cs" />
+    <Compile Include="Assets\Editor\MenuItems.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
