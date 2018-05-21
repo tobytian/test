@@ -11,7 +11,8 @@ public class NewBehaviourScript : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        var type = this.GetType();
+        var an = new Another();
+        var type = an.GetType();
         var methods = type.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic |
                                       BindingFlags.Static);
         Debug.Log("numb" + methods.Length);
@@ -26,7 +27,7 @@ public class NewBehaviourScript : MonoBehaviour
         Debug.Log(mi);
         object[] o = new object[1];
         o[0] = 2;
-        mi.Invoke(this, o);
+        mi.Invoke(an, o);
 
 
         //var methods = type.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static)
@@ -49,6 +50,11 @@ public class NewBehaviourScript : MonoBehaviour
     }
 
 
+
+}
+
+public class Another
+{
     void TestMethod(int x)
     {
         Debug.Log(x);
