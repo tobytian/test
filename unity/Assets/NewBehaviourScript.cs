@@ -25,8 +25,9 @@ public class NewBehaviourScript : MonoBehaviour
             }
         }
         Debug.Log(mi);
-        object[] o = new object[1];
+        object[] o = new object[2];
         o[0] = 2;
+        o[1] = "hello";
         mi.Invoke(an, o);
 
 
@@ -42,21 +43,13 @@ public class NewBehaviourScript : MonoBehaviour
         //    rpcHandleMethodInfos.Add(name, methods[i]);
         //}
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        int[] x = new[] { 2 };
-    }
-
-
-
 }
 
 public class Another
 {
-    void TestMethod(int x)
+    void TestMethod(int x, string str)
     {
         Debug.Log(x);
+        Debug.Log(str);
     }
 }
